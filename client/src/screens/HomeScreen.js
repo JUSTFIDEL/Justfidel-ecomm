@@ -4,6 +4,9 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Products from '../components/Products'
 import { Helmet } from 'react-helmet-async'
+import LoadingBox from '../components/LoadingBox'
+import MessageBox from '../components/MessageBox'
+import { getError } from '../utils'
 
 const reducer = (state, action) => {
 	switch (action.type) {
@@ -36,7 +39,7 @@ const HomeScreen = () => {
 				const result = await authFetch(url)
 				dispatch({ type: 'FETCH_SUCCESS', payload: result.data })
 			} catch (error) {
-				dispatch({ type: 'FETCH_FAIL', payload: error.message })
+				dispatch({ type: 'FETCH_FAIL', payload: getError(error) })
 			}
 			// setProducts(data)
 		}
@@ -51,11 +54,9 @@ const HomeScreen = () => {
 			<h1 className='text-center'>Featured Products</h1>
 			<div className='products'>
 				{loading ? (
-					<div className='align-c'>
-						<h1>Loading...</h1>
-					</div>
+					<LoadingBox />
 				) : error ? (
-					<div>{error}</div>
+					<MessageBox variant='danger'>{error}</MessageBox>
 				) : (
 					<Row>
 						{products.map(product => (

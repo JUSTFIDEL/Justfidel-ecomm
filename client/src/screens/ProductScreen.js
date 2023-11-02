@@ -1,5 +1,5 @@
-import React, { useEffect, useReducer } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useContext, useEffect, useReducer } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import authFetch from '../axios/custom'
 import Row from 'react-bootstrap/esm/Row'
 import Col from 'react-bootstrap/esm/Col'
@@ -9,6 +9,10 @@ import Badge from 'react-bootstrap/Badge'
 import Rating from '../components/Rating'
 import Button from 'react-bootstrap/esm/Button'
 import { Helmet } from 'react-helmet-async'
+import MessageBox from '../components/MessageBox'
+import LoadingBox from '../components/LoadingBox'
+import { getError } from '../utils'
+import { StoreContext } from '../contexts/StoreContext'
 
 const reducer = (state, action) => {
 	switch (action.type) {
@@ -26,6 +30,7 @@ const reducer = (state, action) => {
 
 const ProductScreen = () => {
 	const { _id } = useParams()
+	const navigate = useNavigate()
 
 	const [{ product, error, loading }, dispatch] = useReducer(reducer, {
 		product: [],
@@ -42,16 +47,37 @@ const ProductScreen = () => {
 				const result = await authFetch(url)
 				dispatch({ type: 'FETCH_SUCCESS', payload: result.data })
 			} catch (error) {
-				dispatch({ type: 'FETCH_FAIL', payload: error.message })
+				dispatch({ type: 'FETCH_FAIL', payload: getError(error) })
 			}
 		}
 		fetchData()
 	}, [url])
 
+	const { state, dispatch: ctxDispatch } = useContext(StoreContext)
+	const { cart } = state
+
+	const addToCartHandler = async () => {
+		const existItem = cart.cartItems.find(x => x._id === product._id)
+		const quantity = existItem ? existItem.quantity + 1 : 1
+		const url = `/api/products/${product._id}`
+		const { data } = await authFetch(url)
+
+		if (data.countInStock < quantity) {
+			alert('Sorry, Product is out of stock')
+			return
+		}
+		ctxDispatch({
+			type: 'CART_ADD_ITEM',
+			payload: { ...product, quantity },
+		})
+
+		navigate('/cart')
+	}
+
 	return loading ? (
-		<div>Loading...</div>
+		<LoadingBox />
 	) : error ? (
-		<div>{error}</div>
+		<MessageBox variant='danger'>{error}</MessageBox>
 	) : (
 		<div>
 			<Row>
@@ -62,7 +88,7 @@ const ProductScreen = () => {
 						alt={product.name}
 					/>
 				</Col>
-				<Col md={3}>
+				<Col md={3} className='mt2'>
 					<ListGroup variant='flush'>
 						<ListGroup.Item>
 							<Helmet>
@@ -83,7 +109,7 @@ const ProductScreen = () => {
 					</ListGroup>
 				</Col>
 				<Col md={3}>
-					<Card>
+					<Card className='mt2'>
 						<Card.Body>
 							<ListGroup variant='flush'>
 								<ListGroup.Item>
@@ -112,7 +138,10 @@ const ProductScreen = () => {
 								{product.countInStock > 0 && (
 									<ListGroup.Item>
 										<div className='d-grid'>
-											<Button variant='success'>
+											<Button
+												variant='success'
+												onClick={addToCartHandler}
+											>
 												Add to Cart
 											</Button>
 										</div>
