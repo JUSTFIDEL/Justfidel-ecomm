@@ -13,6 +13,7 @@ import MessageBox from '../components/MessageBox'
 import LoadingBox from '../components/LoadingBox'
 import { getError } from '../utils'
 import { StoreContext } from '../contexts/StoreContext'
+import { toast } from 'react-toastify'
 
 const reducer = (state, action) => {
 	switch (action.type) {
@@ -62,8 +63,12 @@ const ProductScreen = () => {
 		const url = `/api/products/${product._id}`
 		const { data } = await authFetch(url)
 
+		// if (data.countInStock < quantity) {
+		// 	alert('Sorry, Product is out of stock')
+		// 	return
+		// }
 		if (data.countInStock < quantity) {
-			alert('Sorry, Product is out of stock')
+			toast.error('Sorry, Product is out of stock')
 			return
 		}
 		ctxDispatch({
@@ -82,11 +87,7 @@ const ProductScreen = () => {
 		<div>
 			<Row>
 				<Col md={6}>
-					<img
-						className='img-large'
-						src={product.image}
-						alt={product.name}
-					/>
+					<img className='img-large' src={product.image} alt={product.name} />
 				</Col>
 				<Col md={3} className='mt2'>
 					<ListGroup variant='flush'>
@@ -97,10 +98,7 @@ const ProductScreen = () => {
 							<h1>{product.name}</h1>
 						</ListGroup.Item>
 						<ListGroup.Item>
-							<Rating
-								rating={product.rating}
-								numReviews={product.numReviews}
-							/>
+							<Rating rating={product.rating} numReviews={product.numReviews} />
 						</ListGroup.Item>
 						<ListGroup.Item>Price: N{product.price}</ListGroup.Item>
 						<ListGroup.Item>
@@ -123,13 +121,9 @@ const ProductScreen = () => {
 										<Col>Status:</Col>
 										<Col>
 											{product.countInStock > 0 ? (
-												<Badge bg='success'>
-													In Stock
-												</Badge>
+												<Badge bg='success'>In Stock</Badge>
 											) : (
-												<Badge bg='danger'>
-													Out of Stock
-												</Badge>
+												<Badge bg='danger'>Out of Stock</Badge>
 											)}
 										</Col>
 									</Row>
@@ -138,10 +132,7 @@ const ProductScreen = () => {
 								{product.countInStock > 0 && (
 									<ListGroup.Item>
 										<div className='d-grid'>
-											<Button
-												variant='success'
-												onClick={addToCartHandler}
-											>
+											<Button variant='success' onClick={addToCartHandler}>
 												Add to Cart
 											</Button>
 										</div>

@@ -9,6 +9,7 @@ import MessageBox from '../components/MessageBox'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import authFetch from '../axios/custom'
+import { toast } from 'react-toastify'
 
 function CartScreen() {
 	const { state, dispatch: ctxDispatch } = useContext(StoreContext)
@@ -22,13 +23,13 @@ function CartScreen() {
 		const url = `/api/products/${item._id}`
 		const { data } = await authFetch(url)
 
-		if (data.countInStock < quantity) {
-			alert('Sorry, Product is out of stock')
-			return
-		}
+		// if (data.countInStock < quantity) {
+		// 	alert('Sorry, Product is out of stock')
+		// 	return
+		// }
 
 		if (data.countInStock < quantity) {
-			alert('Sorry, Product is out of stock')
+			toast.error('Sorry, Product is out of stock')
 			return
 		}
 		ctxDispatch({
@@ -72,9 +73,7 @@ function CartScreen() {
 												className='img-fluid rounded img-thumbnail'
 											></img>{' '}
 											<Link to={`/product/${item._id}`}>
-												<span className='s-text'>
-													{item.name}
-												</span>
+												<span className='s-text'>{item.name}</span>
 											</Link>
 										</Col>
 										<Col md={3} className='center'>
@@ -82,10 +81,7 @@ function CartScreen() {
 												variant='light'
 												disabled={item.quantity === 1}
 												onClick={() =>
-													updateCartHandler(
-														item,
-														item.quantity - 1,
-													)
+													updateCartHandler(item, item.quantity - 1)
 												}
 											>
 												<i className='fa-solid fa-minus-circle'></i>
@@ -93,15 +89,9 @@ function CartScreen() {
 											<span>{item.quantity}</span>{' '}
 											<Button
 												variant='light'
-												disabled={
-													item.quantity ===
-													item.countInStock
-												}
+												disabled={item.quantity === item.countInStock}
 												onClick={() =>
-													updateCartHandler(
-														item,
-														item.quantity + 1,
-													)
+													updateCartHandler(item, item.quantity + 1)
 												}
 											>
 												<i className='fa-solid fa-plus-circle'></i>
@@ -113,9 +103,7 @@ function CartScreen() {
 										<Col md={2} className='center'>
 											<Button
 												variant='light'
-												onClick={() =>
-													removeItemHandler(item)
-												}
+												onClick={() => removeItemHandler(item)}
 											>
 												<i className='fa-solid fa-trash'></i>
 											</Button>
@@ -132,16 +120,9 @@ function CartScreen() {
 							<ListGroup variant='flush'>
 								<ListGroup.Item>
 									<h3>
-										Subtotal (
-										{cartItems.reduce(
-											(a, c) => a + c.quantity,
-											0,
-										)}{' '}
+										Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
 										items) : N
-										{cartItems.reduce(
-											(a, c) => a + c.price * c.quantity,
-											0,
-										)}
+										{cartItems.reduce((a, c) => a + c.price * c.quantity, 0)}
 									</h3>
 								</ListGroup.Item>
 								<ListGroup.Item>

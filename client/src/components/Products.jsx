@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button'
 import Rating from './Rating'
 import authFetch from '../axios/custom'
 import { StoreContext } from '../contexts/StoreContext'
+import { toast } from 'react-toastify'
 
 const Products = ({ product }) => {
 	const { state, dispatch: ctxDispatch } = useContext(StoreContext)
@@ -18,8 +19,12 @@ const Products = ({ product }) => {
 		const url = `/api/products/${item._id}`
 		const { data } = await authFetch(url)
 
+		// if (data.countInStock < quantity) {
+		// 	alert('Sorry, Product is out of stock')
+		// 	return
+		// }
 		if (data.countInStock < quantity) {
-			alert('Sorry, Product is out of stock')
+			toast.error('Sorry, Product is out of stock')
 			return
 		}
 		ctxDispatch({
@@ -31,30 +36,20 @@ const Products = ({ product }) => {
 	return (
 		<Card className='prod_card'>
 			<Link to={`/product/${product._id}`}>
-				<img
-					src={product.image}
-					alt={product.name}
-					className='card-img-top'
-				/>
+				<img src={product.image} alt={product.name} className='card-img-top' />
 			</Link>
 			<Card.Body className='product-info'>
 				<Link to={`/product/${product._id}`}>
 					<Card.Title className='c_tit'>{product.name} </Card.Title>
 				</Link>
-				<Rating
-					rating={product.rating}
-					numReviews={product.numReviews}
-				/>
+				<Rating rating={product.rating} numReviews={product.numReviews} />
 				<Card.Text>N{product.price}</Card.Text>
 				{product.countInStock === 0 ? (
 					<Button variant='outline-secondary' disabled>
 						Out of stock
 					</Button>
 				) : (
-					<Button
-						variant='success'
-						onClick={() => addToCartHandler(product)}
-					>
+					<Button variant='success' onClick={() => addToCartHandler(product)}>
 						Add to cart
 					</Button>
 				)}

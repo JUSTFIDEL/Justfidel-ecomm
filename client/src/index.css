@@ -98,9 +98,9 @@ header a {
 
 .nav_profile {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	gap: 0.5rem;
 }
 
 .logo_img {
@@ -202,6 +202,61 @@ footer {
 	color: var(--primary);
 }
 
+.checkout-steps > div {
+	border-bottom: 0.2rem solid #a0a0a0;
+	color: #a0a0a0;
+}
+
+.checkout-steps > div.active {
+	border-bottom: 0.2rem solid #f08000;
+	color: #f08000;
+}
+
+#text--color {
+	color: #049f32 !important;
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+	box-shadow: none !important;
+}
+
+.custom-control-input:focus ~ .custom-control-label::after {
+	box-shadow: none !important;
+}
+
+input[type='radio']:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+input[type='radio']:after {
+	width: 16px;
+	height: 16px;
+	border-radius: 15px;
+	top: -2px;
+	left: -1px;
+	position: relative;
+	background-color: var(--white);
+	content: '';
+	display: inline-block;
+	visibility: visible;
+	border: 2px solid var(--primary_hover);
+}
+
+input[type='radio']:checked:after {
+	width: 16px;
+	height: 16px;
+	border-radius: 15px;
+	top: -2px;
+	left: -1px;
+	position: relative;
+	background-color: var(--primary_hover);
+	content: '';
+	display: inline-block;
+	visibility: visible;
+	border: 2px solid var(--primary);
+}
+
 @media only screen and (min-width: 765px) {
 	body {
 		font-family: 'Source Sans 3', sans-serif;
@@ -228,6 +283,11 @@ footer {
 	.logo_img {
 		height: 2.5rem;
 		padding-right: 0.5rem;
+	}
+
+	.nav_profile {
+		flex-direction: row;
+		gap: 0.75rem;
 	}
 
 	h1 {
