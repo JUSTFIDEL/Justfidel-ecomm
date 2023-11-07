@@ -252,13 +252,13 @@ export default function OrderScreen() {
 										{isPending ? (
 											<LoadingBox />
 										) : (
-											<PayPalScriptProvider>
+											<div>
 												<PayPalButtons
 													createOrder={createOrder}
 													onApprove={onApprove}
 													onError={onError}
 												></PayPalButtons>
-											</PayPalScriptProvider>
+											</div>
 										)}
 										{loadingPay && <LoadingBox></LoadingBox>}
 									</ListGroup.Item>
