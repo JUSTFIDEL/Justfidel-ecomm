@@ -61,17 +61,21 @@ function App() {
 								className='user_pro'
 							>
 								<LinkContainer to='/profile'>
-									<NavDropdown.Item>User Profile</NavDropdown.Item>
+									<NavDropdown.Item className='sm-font'>
+										User Profile
+									</NavDropdown.Item>
 								</LinkContainer>
 
 								<LinkContainer to='/orderhistory'>
-									<NavDropdown.Item>Order History</NavDropdown.Item>
+									<NavDropdown.Item className='sm-font'>
+										Order History
+									</NavDropdown.Item>
 								</LinkContainer>
 
 								<NavDropdown.Divider />
 
 								<Link
-									className='dropdown-item'
+									className='dropdown-item sm-font'
 									to='#signout'
 									onClick={signoutHandler}
 								>
