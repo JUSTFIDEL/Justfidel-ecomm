@@ -1,16 +1,16 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 // import Container from 'react-bootstrap/Container'
 import HomeScreen from './screens/HomeScreen'
 import ProductScreen from './screens/ProductScreen'
 // import Navbar from 'react-bootstrap/Navbar'
 import Badge from 'react-bootstrap/Badge'
-// import Nav from 'react-bootstrap/Nav'
+import Nav from 'react-bootstrap/Nav'
 import { LinkContainer } from 'react-router-bootstrap'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 // import { LinkContainer } from 'react-router-bootstrap'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { StoreContext } from './contexts/StoreContext'
 import CartScreen from './screens/CartScreen'
 import SigninScreen from './screens/SigninScreen'
@@ -22,6 +22,13 @@ import OrderScreen from './screens/OrderScreen'
 import OrderHistoryScreen from './screens/OrderHistoryScreen'
 import ProfileScreen from './screens/ProfileScreen'
 import SearchScreen from './screens/SearchScreen'
+import Button from 'react-bootstrap/Button'
+import { getError } from './utils'
+import authFetch from './axios/custom'
+import SearchBox from './components/SearchBox'
+import ProtectedRoute from './components/ProtectedRoute'
+import DashboardScreen from './screens/DashboardScreen'
+import AdminRoute from './components/AdminRoute'
 
 function App() {
 	const { state, dispatch } = useContext(StoreContext)
@@ -35,15 +42,43 @@ function App() {
 		window.location.href = '/signin'
 	}
 
+	const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
+	const [categories, setCategories] = useState([])
+
+	useEffect(() => {
+		const fetchCategories = async () => {
+			try {
+				const { data } = await authFetch(`/api/products/categories`)
+				setCategories(data)
+			} catch (err) {
+				toast.error(getError(err))
+			}
+		}
+		fetchCategories()
+	}, [])
+
 	return (
 		<BrowserRouter>
-			<div className='site-container'>
+			<div
+				className={
+					sidebarIsOpen ? 'site-container active-cont' : 'site-container'
+				}
+			>
 				<ToastContainer position='top-center' limit={1} />
 				<header>
-					<Link to='/' className='logo_cont'>
-						<img src='../favicon.png' alt='logo' className='logo_img' />
-						<p className='logo_text'>JustFidel</p>
-					</Link>
+					<Button
+						variant='success'
+						onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
+					>
+						<i className='fas fa-bars'></i>
+					</Button>
+					<div className='nav_logo'>
+						<Link to='/' className='logo_cont'>
+							<img src='../favicon.png' alt='logo' className='logo_img' />
+							<p className='logo_text'>JustFidel</p>
+						</Link>
+						<SearchBox />
+					</div>
 					<div className='nav_profile'>
 						<Link to='/cart' className='nav-link'>
 							<i className='fa-solid fa-cart-shopping fa-beat i-color'>
@@ -87,6 +122,28 @@ function App() {
 								Sign In
 							</Link>
 						)}
+						{userInfo && userInfo.isAdmin && (
+							<NavDropdown title='Admin' id='admin-nav-dropdown'>
+								<LinkContainer to='/admin/dashboard'>
+									<NavDropdown.Item className='sm-font'>
+										Dashboard
+									</NavDropdown.Item>
+								</LinkContainer>
+								<LinkContainer to='/admin/productlist'>
+									<NavDropdown.Item className='sm-font'>
+										Products
+									</NavDropdown.Item>
+								</LinkContainer>
+								<LinkContainer to='/admin/orderlist'>
+									<NavDropdown.Item className='sm-font'>
+										Orders
+									</NavDropdown.Item>
+								</LinkContainer>
+								<LinkContainer to='/admin/userlist'>
+									<NavDropdown.Item className='sm-font'>Users</NavDropdown.Item>
+								</LinkContainer>
+							</NavDropdown>
+						)}
 					</div>
 				</header>
 				{/* <header>
@@ -116,19 +173,77 @@ function App() {
 					</Navbar>
 				</header> */}
 
+				<div
+					className={
+						sidebarIsOpen
+							? 'active-nav side-navbar d-flex justify-content-between flex-wrap flex-column '
+							: 'side-navbar d-flex justify-content-between flex-wrap flex-column'
+					}
+				>
+					<Nav className='flex-column text-white w-100 p-2'>
+						<Nav.Item>
+							<strong>Categories</strong>
+						</Nav.Item>
+						{categories.map(category => (
+							<Nav.Item key={category}>
+								<LinkContainer
+									to={{
+										pathname: '/search',
+										hash: '#hash',
+										search: `?category=${category}`,
+									}}
+									onClick={() => setSidebarIsOpen(false)}
+								>
+									<Nav.Link>{category}</Nav.Link>
+								</LinkContainer>
+							</Nav.Item>
+						))}
+					</Nav>
+				</div>
+
 				<main className='pt-3'>
 					<Routes>
 						<Route path='/' element={<HomeScreen />} />
+						{/* Admin Routes */}
+						<Route
+							path='/admin/dashboard'
+							element={
+								<AdminRoute>
+									<DashboardScreen />
+								</AdminRoute>
+							}
+						/>
 						<Route path='/product/:_id' element={<ProductScreen />} />
 						<Route path='/cart' element={<CartScreen />} />
 						<Route path='/signin' element={<SigninScreen />} />
 						<Route path='/signup' element={<SignupScreen />} />
-						<Route path='/profile' element={<ProfileScreen />} />
+						<Route
+							path='/profile'
+							element={
+								<ProtectedRoute>
+									<ProfileScreen />
+								</ProtectedRoute>
+							}
+						/>
 						<Route path='/shipping' element={<ShippingAddressScreen />} />
 						<Route path='/payment' element={<PaymentMethodScreen />} />
 						<Route path='/placeorder' element={<PlaceOrderScreen />} />
-						<Route path='/order/:id' element={<OrderScreen />} />
-						<Route path='/orderhistory' element={<OrderHistoryScreen />} />
+						<Route
+							path='/order/:id'
+							element={
+								<ProtectedRoute>
+									<OrderScreen />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path='/orderhistory'
+							element={
+								<ProtectedRoute>
+									<OrderHistoryScreen />
+								</ProtectedRoute>
+							}
+						/>
 						<Route path='/search' element={<SearchScreen />} />
 					</Routes>
 				</main>

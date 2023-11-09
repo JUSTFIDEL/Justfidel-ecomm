@@ -1,4 +1,3 @@
-import axios from 'axios'
 import Button from 'react-bootstrap/Button'
 import React, { useEffect, useReducer, useState } from 'react'
 import Col from 'react-bootstrap/Col'
@@ -11,6 +10,7 @@ import MessageBox from '../components/MessageBox'
 import LoadingBox from '../components/LoadingBox'
 import Rating from '../components/Rating'
 import Products from '../components/Products'
+import authFetch from '../axios/custom'
 // import { LinkContainer } from 'react-router-bootstrap'
 
 const reducer = (state, action) => {
@@ -98,8 +98,8 @@ export default function SearchScreen() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const { data } = await axios.get(
-					`${url}/api/products/search?page=${page}&query=${query}&category=${category}&price=${price}&rating=${rating}&order=${order}`,
+				const { data } = await authFetch(
+					`/api/products/search?page=${page}&query=${query}&category=${category}&price=${price}&rating=${rating}&order=${order}`,
 				)
 				dispatch({ type: 'FETCH_SUCCESS', payload: data })
 			} catch (err) {
@@ -116,7 +116,7 @@ export default function SearchScreen() {
 	useEffect(() => {
 		const fetchCategories = async () => {
 			try {
-				const { data } = await axios.get(`${url}/api/products/categories`)
+				const { data } = await authFetch(`/api/products/categories`)
 				setCategories(data)
 			} catch (err) {
 				toast.error(getError(err))
