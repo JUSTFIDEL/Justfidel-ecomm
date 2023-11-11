@@ -44,7 +44,7 @@ export default function OrderScreen() {
 	const { state } = useContext(StoreContext)
 	const { userInfo } = state
 
-	const url = 'http://localhost:8000'
+	const url = 'https://justfidel-ecomm-api.vercel.app'
 
 	const params = useParams()
 	const { id: orderId } = params

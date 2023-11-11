@@ -50,7 +50,7 @@ export default function PlaceOrderScreen() {
 			dispatch({ type: 'CREATE_REQUEST' })
 
 			const { data } = await axios.post(
-				'http://localhost:8000/api/orders',
+				'https://justfidel-ecomm-api.vercel.app/api/orders',
 				{
 					orderItems: cart.cartItems,
 					shippingAddress: cart.shippingAddress,

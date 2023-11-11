@@ -4,10 +4,11 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Helmet } from 'react-helmet-async'
 import { useContext, useEffect, useState } from 'react'
-import Axios from 'axios'
 import { StoreContext } from '../contexts/StoreContext'
 import { toast } from 'react-toastify'
 import { getError } from '../utils'
+import axios from 'axios'
+// import Axios from 'axios'
 
 function SignupScreen() {
 	const navigate = useNavigate()
@@ -15,7 +16,7 @@ function SignupScreen() {
 	const redirectInUrl = new URLSearchParams(search).get('redirect')
 	const redirect = redirectInUrl ? redirectInUrl : '/'
 
-	const url = 'http://localhost:8000/api/users/signup'
+	const url = 'https://justfidel-ecomm-api.vercel.app/api/users/signup'
 	const { state, dispatch } = useContext(StoreContext)
 	const { userInfo } = state
 
@@ -35,7 +36,7 @@ function SignupScreen() {
 		}
 
 		try {
-			const { data } = await Axios.post(url, { name, email, password })
+			const { data } = await axios.post(url, { name, email, password })
 			dispatch({ type: 'USER_SIGNIN', payload: data })
 			localStorage.setItem('userInfo', JSON.stringify(data))
 			navigate(redirect || '/')
