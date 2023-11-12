@@ -175,8 +175,7 @@ function App() {
 									)}
 								</i>
 							</Link>
-
-							{/* {userInfo ? (
+							{userInfo ? (
 								<NavDropdown
 									title={userInfo.name}
 									id='basic-nav-dropdown'
@@ -208,13 +207,13 @@ function App() {
 								<Link className='nav-link' to='/signin'>
 									Sign In
 								</Link>
-							)} */}
+							)}
 
-							{userInfo && userInfo.isAdmin ? (
+							{userInfo && userInfo.isAdmin && (
 								<NavDropdown
 									title='Admin'
 									id='admin-nav-dropdown'
-									// className='dis_none'
+									className='dis_none'
 								>
 									<LinkContainer to='/admin/dashboard'>
 										<NavDropdown.Item className='sm-font'>
@@ -236,61 +235,7 @@ function App() {
 											Users
 										</NavDropdown.Item>
 									</LinkContainer>
-
-									<LinkContainer to='/profile'>
-										<NavDropdown.Item className='sm-font'>
-											User Profile
-										</NavDropdown.Item>
-									</LinkContainer>
-
-									<LinkContainer to='/orderhistory'>
-										<NavDropdown.Item className='sm-font'>
-											Order History
-										</NavDropdown.Item>
-									</LinkContainer>
-
-									<NavDropdown.Divider />
-
-									<Link
-										className='dropdown-item sm-font'
-										to='#signout'
-										onClick={signoutHandler}
-									>
-										Sign Out{' '}
-									</Link>
 								</NavDropdown>
-							) : userInfo ? (
-								<NavDropdown
-									title={userInfo.name}
-									id='basic-nav-dropdown'
-									className='user_pro'
-								>
-									<LinkContainer to='/profile'>
-										<NavDropdown.Item className='sm-font'>
-											User Profile
-										</NavDropdown.Item>
-									</LinkContainer>
-
-									<LinkContainer to='/orderhistory'>
-										<NavDropdown.Item className='sm-font'>
-											Order History
-										</NavDropdown.Item>
-									</LinkContainer>
-
-									<NavDropdown.Divider />
-
-									<Link
-										className='dropdown-item sm-font'
-										to='#signout'
-										onClick={signoutHandler}
-									>
-										Sign Out{' '}
-									</Link>
-								</NavDropdown>
-							) : (
-								<Link className='nav-link' to='/signin'>
-									Sign In
-								</Link>
 							)}
 						</div>
 					</header>

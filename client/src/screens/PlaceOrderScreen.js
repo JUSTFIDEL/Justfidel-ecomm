@@ -184,6 +184,7 @@ export default function PlaceOrderScreen() {
 											type='button'
 											onClick={placeOrderHandler}
 											disabled={cart.cartItems.length === 0}
+											variant='success'
 										>
 											Place Order
 										</Button>

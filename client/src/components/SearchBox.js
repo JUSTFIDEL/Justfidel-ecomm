@@ -14,7 +14,7 @@ export default function SearchBox() {
 	}
 
 	return (
-		<Form onSubmit={submitHandler}>
+		<Form onSubmit={submitHandler} className='dis_none'>
 			<InputGroup>
 				<FormControl
 					type='text'
