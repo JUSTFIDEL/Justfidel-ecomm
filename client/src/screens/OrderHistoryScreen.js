@@ -61,40 +61,80 @@ export default function OrderHistoryScreen() {
 			) : error ? (
 				<MessageBox variant='danger'>{error}</MessageBox>
 			) : (
-				<table className='table'>
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>DATE</th>
-							<th>TOTAL</th>
-							<th>PAID</th>
-							<th>DELIVERED</th>
-							<th>ACTIONS</th>
-						</tr>
-					</thead>
-					<tbody>
+				<div>
+					<div className='lg_scr'>
+						<table className='table'>
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>DATE</th>
+									<th>TOTAL</th>
+									<th>PAID</th>
+									<th>DELIVERED</th>
+									<th>ACTIONS</th>
+								</tr>
+							</thead>
+							<tbody>
+								{orders.map(order => (
+									<tr key={order._id}>
+										<td>{order._id}</td>
+										<td>{order.createdAt.substring(0, 10)}</td>
+										<td>{order.totalPrice.toFixed(2)}</td>
+										<td>{order.isPaid ? order.paidAt : 'No'}</td>
+										<td>{order.isDelivered ? order.deliveredAt : 'No'}</td>
+										<td>
+											<Button
+												type='button'
+												variant='light'
+												onClick={() => {
+													navigate(`/order/${order._id}`)
+												}}
+											>
+												Details
+											</Button>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+
+					<div className='div_flex sm_scr'>
 						{orders.map(order => (
-							<tr key={order._id}>
-								<td>{order._id}</td>
-								<td>{order.createdAt.substring(0, 10)}</td>
-								<td>{order.totalPrice.toFixed(2)}</td>
-								<td>{order.isPaid ? order.paidAt : 'No'}</td>
-								<td>{order.isDelivered ? order.deliveredAt : 'No'}</td>
-								<td>
+							<div key={order._id}>
+								<p>
+									<strong>ID:</strong> {order._id}
+								</p>
+								<p>
+									<strong>DATE:</strong> {order.createdAt.substring(0, 10)}
+								</p>
+								<p>
+									<strong>TOTAL:</strong> {order.totalPrice.toFixed(2)}
+								</p>
+								<p>
+									<strong>PAID:</strong> {order.isPaid ? order.paidAt : 'No'}
+								</p>
+								<p>
+									<strong>DELIVERED:</strong>{' '}
+									{order.isDelivered ? order.deliveredAt : 'No'}
+								</p>
+								<p>
+									<strong>ACTION: </strong>{' '}
 									<Button
 										type='button'
-										variant='light'
+										variant='dark'
 										onClick={() => {
 											navigate(`/order/${order._id}`)
 										}}
 									>
 										Details
 									</Button>
-								</td>
-							</tr>
+								</p>
+								<hr />
+							</div>
 						))}
-					</tbody>
-				</table>
+					</div>
+				</div>
 			)}
 		</div>
 	)

@@ -87,6 +87,10 @@ header {
 	display: none !important;
 }
 
+.lg_scr {
+	display: none !important;
+}
+
 .btn-outline-primary {
 	background-color: var(--primary_hover);
 	color: var(--white);
@@ -123,6 +127,16 @@ header a {
 	color: var(--white);
 }
 
+.div_flex {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	max-width: 350px;
+	background: rgb(245, 245, 245);
+	padding: 0.75rem;
+	margin-bottom: 1rem;
+}
+
 .nav_profile {
 	display: flex;
 	flex-direction: row;
@@ -138,6 +152,10 @@ header a {
 
 .nav-link {
 	color: var(--white) !important;
+}
+
+.table {
+	width: 100% !important;
 }
 
 /* .lg-prof {
@@ -329,6 +347,15 @@ element.style {
 		display: flex;
 		flex-direction: row;
 		gap: 0.75rem;
+	}
+
+	.sm_scr {
+		display: none !important;
+	}
+
+	.lg_scr {
+		display: block !important;
+		width: 100%;
 	}
 
 	.nav_logo {
