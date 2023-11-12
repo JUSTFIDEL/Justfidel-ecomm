@@ -29,6 +29,9 @@ import SearchBox from './components/SearchBox'
 import ProtectedRoute from './components/ProtectedRoute'
 import DashboardScreen from './screens/DashboardScreen'
 import AdminRoute from './components/AdminRoute'
+import AdminProductScreen from './screens/AdminProductScreen'
+import AdminOrdersScreen from './screens/AdminOrderScreen'
+import UsersScreen from './screens/UsersScreen'
 
 function App() {
 	const { state, dispatch } = useContext(StoreContext)
@@ -333,6 +336,30 @@ function App() {
 							element={
 								<AdminRoute>
 									<DashboardScreen />
+								</AdminRoute>
+							}
+						/>
+						<Route
+							path='/admin/productlist'
+							element={
+								<AdminRoute>
+									<AdminProductScreen />
+								</AdminRoute>
+							}
+						/>
+						<Route
+							path='/admin/orderlist'
+							element={
+								<AdminRoute>
+									<AdminOrdersScreen />
+								</AdminRoute>
+							}
+						/>
+						<Route
+							path='/admin/userlist'
+							element={
+								<AdminRoute>
+									<UsersScreen />
 								</AdminRoute>
 							}
 						/>
